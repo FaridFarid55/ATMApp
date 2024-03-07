@@ -138,7 +138,7 @@ namespace myATMapp.App
                     break;
 
                 case (int)EnAppMenu.PlaceDeposit:
-                   PlaceDeposit();
+                    PlaceDeposit();
                     break;
 
                 case (int)EnAppMenu.MakeWithdrawal:
@@ -201,7 +201,7 @@ namespace myATMapp.App
         public void PlaceDeposit()
         {
             Console.WriteLine("\n only multiples of 500 and 1000 naira  allowed.\n");
-            int nTransitionAtm = ClsValidator.convert<int>($"amount {ClsAppScreen.cur}");
+            int nTransitionAmt = ClsValidator.convert<int>($"amount {ClsAppScreen.cur}");
 
             // simulate counting
             Console.WriteLine("\n Checking And Counting bank notes.\n");
@@ -209,38 +209,47 @@ namespace myATMapp.App
             Console.WriteLine("");
 
             // some bad clothes
-            if (nTransitionAtm <= 0)
+            if (nTransitionAmt <= 0)
             {
                 ClsUiHelper.PrintMessage("Amount needs to be greater than zero. Try again.", false);
                 return;
             }
 
-            if (nTransitionAtm % 500 != 0)
+            if (nTransitionAmt % 500 != 0)
             {
                 ClsUiHelper.PrintMessage("Enter Deposit Amount in multiples of 500 or 1000. Try again.", false);
                 return;
             }
-            if (PreViewBankNotes(nTransitionAtm) == false)
+            if (PreViewBankNotes(nTransitionAmt) == false)
             {
                 ClsUiHelper.PrintMessage("you Have Cancelled your action.", false);
                 return;
             }
 
             // bind transaction details to transaction object
-            InsertTransAction(SelectedAccount.Id, EnTransActionType.Deposit, nTransitionAtm, "");
+            InsertTransAction(SelectedAccount.Id, EnTransActionType.Deposit, nTransitionAmt, "");
 
             // update account balance
-            SelectedAccount.AccountBalance += nTransitionAtm;
+            SelectedAccount.AccountBalance += nTransitionAmt;
 
             // print success message 
-            ClsUiHelper.PrintMessage($"your deposit of : {ClsUiHelper.FormatAmount(nTransitionAtm)} was" +
-                $" successfully.",true);
+            ClsUiHelper.PrintMessage($"your deposit of : {ClsUiHelper.FormatAmount(nTransitionAmt)} was" +
+                $" successfully.", true);
         }
 
 
         public void MakeWithdrawal()
         {
-            throw new NotImplementedException();
+            float TransActionAmt = 0;
+            float cSelectAmount = ClsAppScreen.SelectAmount();
+
+            // condition
+            if (cSelectAmount == -1)
+                cSelectAmount = ClsAppScreen.SelectAmount();
+            else if (cSelectAmount != 0)
+                TransActionAmt = cSelectAmount;
+            else
+                TransActionAmt = ClsValidator.convert<float>($"Amount {ClsAppScreen.cur}");
         }
 
         private bool PreViewBankNotes(int amount)

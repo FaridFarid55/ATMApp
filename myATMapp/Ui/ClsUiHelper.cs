@@ -79,5 +79,45 @@ namespace myATMapp.Ui
         {
             return ++TranId;
         }
+
+        // set select Make Withdrawal
+        public static float OptionWithdrawal(float amount)
+        {
+            switch (amount)
+            {
+                case 1:
+                    return 500;
+                    break;
+                case 2:
+                    return 1000;
+                    break;
+                case 3:
+                    return 1500;
+                    break;
+                case 4:
+                    return 2000;
+                    break;
+                case 5:
+                    return 5000;
+                    break;
+                case 6:
+                    return 10000;
+                    break;
+                case 7:
+                    return 15000;
+                    break;
+                case 8:
+                    return 20000;
+                    break;
+                case 0:
+                    return 0;
+                    break;
+                default:
+                    PrintMessage("Invalid input. Try again..", false);
+                    ClsAppScreen.SelectAmount();
+                    return -1;
+                    break;
+            }
+        }
     }
 }

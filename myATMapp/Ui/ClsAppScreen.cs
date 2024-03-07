@@ -106,5 +106,21 @@ namespace myATMapp.Ui
             ClsUiHelper.PrintDoAntimine();
             Console.Clear();
         }
+
+        internal static float SelectAmount()
+        {
+            Console.WriteLine("");
+            Console.WriteLine("1. {0}500                 5. {0}5000\n" +
+                              "2. {0}1000                6. {0}10,000\n" +
+                              "3. {0}1500                7. {0}15,000\n" +
+                              "4. {0}2000                8. {0}20,000\n" +
+                                         "0. {0}other", cur);
+            Console.WriteLine("");
+            //
+            float oSelectAmount = ClsValidator.convert<float>("option:");
+
+            // return option Make Withdrawal
+            return ClsUiHelper.OptionWithdrawal(oSelectAmount);
+        }
     }
 }
