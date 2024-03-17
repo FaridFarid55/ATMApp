@@ -11,6 +11,7 @@ namespace myATMapp.App
         private List<UserAccount> UserAccountList;
         private UserAccount SelectedAccount;
         private List<TransActionModel> ListTransAction = new List<TransActionModel>();
+        private const float cMinKeptAmount = 500;
 
         public void Run()
         {
@@ -142,7 +143,7 @@ namespace myATMapp.App
                     break;
 
                 case (int)EnAppMenu.MakeWithdrawal:
-                    Console.WriteLine("Making Withdrawal.....\n");
+                    MakeWithdrawal();
                     break;
 
                 case (int)EnAppMenu.InternalTransFer:
@@ -235,21 +236,59 @@ namespace myATMapp.App
             // print success message 
             ClsUiHelper.PrintMessage($"your deposit of : {ClsUiHelper.FormatAmount(nTransitionAmt)} was" +
                 $" successfully.", true);
+
         }
 
 
         public void MakeWithdrawal()
         {
-            float TransActionAmt = 0;
+            float cTransActionAmt = 0;
             float cSelectAmount = ClsAppScreen.SelectAmount();
 
             // condition
             if (cSelectAmount == -1)
                 cSelectAmount = ClsAppScreen.SelectAmount();
             else if (cSelectAmount != 0)
-                TransActionAmt = cSelectAmount;
+                cTransActionAmt = cSelectAmount;
             else
-                TransActionAmt = ClsValidator.convert<float>($"Amount {ClsAppScreen.cur}");
+                cTransActionAmt = ClsValidator.convert<float>($"Amount {ClsAppScreen.cur}");
+
+            // input validate
+            if (cTransActionAmt <= 0)
+            {
+                ClsUiHelper.PrintMessage("Amount needs to be greater than zero. Tray again", false);
+                return;
+            }
+            if (cTransActionAmt % cMinKeptAmount != 0)
+            {
+                ClsUiHelper.PrintMessage("you can only Withdrawal in Amount multipoles of 500 or 1000 naira. Try again", false);
+                return;
+            }
+
+            //business logic validation
+            if (cTransActionAmt > (float)SelectedAccount.AccountBalance)
+            {
+                ClsUiHelper.PrintMessage($"Withdrawal failed . your balance is to low to Withdrawal" +
+                    $"{ClsUiHelper.FormatAmount((decimal)cTransActionAmt)}", false);
+                return;
+            }
+
+            if ((float)SelectedAccount.AccountBalance - cMinKeptAmount < cTransActionAmt)
+            {
+                ClsUiHelper.PrintMessage($"Withdrawal failed . your account needs to have " +
+                    $"minimum {ClsUiHelper.FormatAmount((decimal)cMinKeptAmount)}");
+                return;
+            }
+
+            // bind Withdrawal deities transaction object
+            InsertTransAction(SelectedAccount.Id, EnTransActionType.Withdrawal, (decimal)cTransActionAmt, "");
+
+            // update account balance
+            SelectedAccount.AccountBalance -= (decimal)cTransActionAmt;
+
+            // print success message 
+            ClsUiHelper.PrintMessage($"your have successfully Withdrawal" +
+                $" : {ClsUiHelper.FormatAmount((decimal)cTransActionAmt)}", true);
         }
 
         private bool PreViewBankNotes(int amount)
@@ -267,6 +306,53 @@ namespace myATMapp.App
 
             // return
             return nPotion.Equals(1);
+        }
+
+        private void ProcessInternalTranFer(IInternalTransFer transFer)
+        {
+            if (transFer.TransFerAmount <= 0)
+            {
+                ClsUiHelper.PrintMessage("Amount needs to be more than zero. Tray again", false);
+                return;
+            }
+
+            // check sender`s account balance
+            if (transFer.TransFerAmount > SelectedAccount.AccountBalance)
+            {
+                ClsUiHelper.PrintMessage($"Transfer failed. you do not have enough balance" +
+                    $"to Transfer {ClsUiHelper.FormatAmount(transFer.TransFerAmount)}", false);
+                return;
+            }
+
+            // check the minimum kept amount
+            if ((float)SelectedAccount.AccountBalance - cMinKeptAmount > cMinKeptAmount)
+            {
+                ClsUiHelper.PrintMessage($"Transfer failed. your account needs to have minimum balance" +
+                $"{ClsUiHelper.FormatAmount((decimal)cMinKeptAmount)}", false);
+                return;
+            }
+
+            // check Recipient`s Account Numbers valid
+            var SelectedBankAccountRecipient =
+                (
+                 from UserAcc in UserAccountList
+                 where UserAcc.AccountNumber == transFer.RecipientBankAccountNumber
+                 select UserAcc
+                ).FirstOrDefault();
+
+            // check null
+            if (SelectedBankAccountRecipient == null)
+            {
+                ClsUiHelper.PrintMessage("Transfer failed. Receiver bank account Number is invalid", false);
+                return;
+            }
+
+            // Check Recipient`s  Name 
+            if (SelectedBankAccountRecipient.FullName != transFer.RecipientBankAccountName)
+            {
+                ClsUiHelper.PrintMessage("Transfer failed. Receiver bank account Name is invalid", false);
+                return;
+            }
         }
     }
 }

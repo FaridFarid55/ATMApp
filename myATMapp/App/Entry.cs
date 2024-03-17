@@ -21,6 +21,7 @@ namespace myATMapp.App
 
             // run
             oATMApp.Run();
+            Console.WriteLine();
 
         }
 

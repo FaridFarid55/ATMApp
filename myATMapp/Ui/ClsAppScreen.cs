@@ -1,4 +1,5 @@
 ﻿using myATMapp.App;
+using myATMapp.Bl;
 using myATMapp.Domain;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace myATMapp.Ui
 {
-    public static class ClsAppScreen
+    public class ClsAppScreen
     {
         internal const string cur = "N";
 
@@ -107,6 +108,10 @@ namespace myATMapp.Ui
             Console.Clear();
         }
 
+        /// <summary>
+        /// this method main Select Amount
+        /// </summary>
+        /// <returns></returns>
         internal static float SelectAmount()
         {
             Console.WriteLine("");
@@ -121,6 +126,17 @@ namespace myATMapp.Ui
 
             // return option Make Withdrawal
             return ClsUiHelper.OptionWithdrawal(oSelectAmount);
+        }
+
+        internal static IInternalTransFer internalTransFerFrom()
+        {
+            var oInternalTransFer = new IInternalTransFer();
+            oInternalTransFer.RecipientBankAccountNumber = ClsValidator.convert<int>("Recipient`s Account Numbers");
+            oInternalTransFer.TransFerAmount = ClsValidator.convert<decimal>($"Amount {cur}");
+            oInternalTransFer.RecipientBankAccountName = ClsUiHelper.GetUserInput("Recipient`s Name :");
+
+            // retuen
+            return oInternalTransFer;
         }
     }
 }
