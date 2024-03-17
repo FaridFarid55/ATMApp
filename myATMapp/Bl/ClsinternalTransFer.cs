@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace myATMapp.Bl
 {
-    public interface IInternalTransFer
+    public class ClsinternalTransFer
     {
         public decimal TransFerAmount { get; set; }
         public string RecipientBankAccountName { get; set; }

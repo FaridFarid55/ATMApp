@@ -1,4 +1,5 @@
-﻿using myATMapp.Bl;
+﻿using ConsoleTables;
+using myATMapp.Bl;
 using myATMapp.Domain;
 using myATMapp.Domain.Enums;
 using myATMapp.Ui;
@@ -8,10 +9,18 @@ namespace myATMapp.App
 {
     class ATMApp : IUserLogin, IUserAccountAction, ITransAction
     {
+        // Initialize
         private List<UserAccount> UserAccountList;
         private UserAccount SelectedAccount;
         private List<TransActionModel> ListTransAction = new List<TransActionModel>();
         private const float cMinKeptAmount = 500;
+        private readonly ClsAppScreen Screen;
+
+        // Constructor
+        public ATMApp()
+        {
+            Screen = new ClsAppScreen();
+        }
 
         public void Run()
         {
@@ -23,12 +32,14 @@ namespace myATMapp.App
 
             // get welcome customer
             ClsAppScreen.WelcomeCustomer(SelectedAccount.FullName);
+            while (true)
+            {
+                // get display Menu
+                ClsAppScreen.DisplayAppMenu();
 
-            // get display Menu
-            ClsAppScreen.DisplayAppMenu();
-
-            // get Menu Option
-            ProcessMenuOption();
+                // get Menu Option
+                ProcessMenuOption();
+            }
         }
 
         /// <summary>
@@ -51,9 +62,10 @@ namespace myATMapp.App
             new UserAccount
                 {
                     Id=2,
-                    FullName="Ail ahmed",
+                    FullName="Ali ahmed",
                     AccountNumber=123457,
-                    CardNumber=060600,
+                      CardPin=124124,
+                    CardNumber=606000,
                     AccountBalance=40000.00m,
                     IsLocked=false,
                 },
@@ -147,11 +159,12 @@ namespace myATMapp.App
                     break;
 
                 case (int)EnAppMenu.InternalTransFer:
-                    Console.WriteLine("Making Internal TransFer.....\n");
+                    var ternsFer = ClsAppScreen.internalTransFerFrom();
+                    ProcessInternalTranFer(ternsFer);
                     break;
 
                 case (int)EnAppMenu.ViewTransAction:
-                    Console.WriteLine("View TransActions.....\n");
+                    ViewTransAction();
                     break;
 
                 case (int)EnAppMenu.Logout:
@@ -190,7 +203,24 @@ namespace myATMapp.App
 
         public void ViewTransAction()
         {
-            throw new NotImplementedException();
+            var FlitedTransActionList = ListTransAction.Where(a => a.UserBankAccountId == SelectedAccount.Id).ToList();
+
+            // Check there`s transaction
+            if (FlitedTransActionList.Count <= 0)
+            {
+                ClsUiHelper.PrintMessage("you have no transaction yet.", true);
+            }
+            else
+            {
+                var table = new ConsoleTable("Id", "TransAction Data", "Type", "Description", "Amount" + ClsAppScreen.cur);
+                foreach (var t in FlitedTransActionList)
+                {
+                    table.AddRow(t.TransActionId, t.TransActionDate, t.TransActionType, t.Description, t.TransActionAmount);
+                }
+                table.Options.EnableCount = false;
+                table.Write();
+                ClsUiHelper.PrintMessage($"you have : {FlitedTransActionList.Count} TransAction(s).", true);
+            }
         }
 
         //
@@ -247,7 +277,10 @@ namespace myATMapp.App
 
             // condition
             if (cSelectAmount == -1)
-                cSelectAmount = ClsAppScreen.SelectAmount();
+            {
+                MakeWithdrawal();
+                return;
+            }
             else if (cSelectAmount != 0)
                 cTransActionAmt = cSelectAmount;
             else
@@ -308,7 +341,7 @@ namespace myATMapp.App
             return nPotion.Equals(1);
         }
 
-        private void ProcessInternalTranFer(IInternalTransFer transFer)
+        private void ProcessInternalTranFer(ClsinternalTransFer transFer)
         {
             if (transFer.TransFerAmount <= 0)
             {
@@ -325,7 +358,7 @@ namespace myATMapp.App
             }
 
             // check the minimum kept amount
-            if ((float)SelectedAccount.AccountBalance - cMinKeptAmount > cMinKeptAmount)
+            if ((float)SelectedAccount.AccountBalance - cMinKeptAmount < cMinKeptAmount)
             {
                 ClsUiHelper.PrintMessage($"Transfer failed. your account needs to have minimum balance" +
                 $"{ClsUiHelper.FormatAmount((decimal)cMinKeptAmount)}", false);
@@ -350,9 +383,30 @@ namespace myATMapp.App
             // Check Recipient`s  Name 
             if (SelectedBankAccountRecipient.FullName != transFer.RecipientBankAccountName)
             {
-                ClsUiHelper.PrintMessage("Transfer failed. Receiver bank account Name is invalid", false);
+                ClsUiHelper.PrintMessage("Transfer failed. Receiver bank account Name  dos not match.", false);
                 return;
             }
+
+            // add transaction to
+            InsertTransAction(SelectedAccount.Id, EnTransActionType.TransFer, -transFer.TransFerAmount, "TransFer" +
+                             $"to {SelectedBankAccountRecipient.AccountNumber}\n" +
+                             $"{SelectedBankAccountRecipient.FullName}");
+
+            // update sender`s account balance
+            SelectedAccount.AccountBalance -= transFer.TransFerAmount;
+
+            // transaction Record-sender
+            InsertTransAction(SelectedAccount.Id, EnTransActionType.TransFer, transFer.TransFerAmount, "TransFred from" +
+                            $"to {SelectedBankAccountRecipient.AccountNumber}\n" +
+                            $"{SelectedBankAccountRecipient.FullName}");
+
+            // update sender`s account balance
+            SelectedBankAccountRecipient.AccountBalance += transFer.TransFerAmount;
+
+            //print Success
+            ClsUiHelper.PrintMessage("you have Successfully transferred : " +
+                $"{transFer.TransFerAmount}" +
+                $" to : {transFer.RecipientBankAccountName}", true);
         }
     }
 }

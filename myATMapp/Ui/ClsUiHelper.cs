@@ -114,7 +114,6 @@ namespace myATMapp.Ui
                     break;
                 default:
                     PrintMessage("Invalid input. Try again..", false);
-                    ClsAppScreen.SelectAmount();
                     return -1;
                     break;
             }

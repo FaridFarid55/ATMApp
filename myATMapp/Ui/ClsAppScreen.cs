@@ -95,7 +95,7 @@ namespace myATMapp.Ui
             Console.WriteLine(":3. Withdrawal                          :");
             Console.WriteLine(":4. TransFer                            :");
             Console.WriteLine(":5. TransAction                         :");
-            Console.WriteLine(":5. Logout                              :\n");
+            Console.WriteLine(":0. Logout                              :\n");
         }
 
         /// <summary>
@@ -128,14 +128,14 @@ namespace myATMapp.Ui
             return ClsUiHelper.OptionWithdrawal(oSelectAmount);
         }
 
-        internal static IInternalTransFer internalTransFerFrom()
+        internal static ClsinternalTransFer internalTransFerFrom()
         {
-            var oInternalTransFer = new IInternalTransFer();
+            var oInternalTransFer = new ClsinternalTransFer();
             oInternalTransFer.RecipientBankAccountNumber = ClsValidator.convert<int>("Recipient`s Account Numbers");
             oInternalTransFer.TransFerAmount = ClsValidator.convert<decimal>($"Amount {cur}");
             oInternalTransFer.RecipientBankAccountName = ClsUiHelper.GetUserInput("Recipient`s Name :");
 
-            // retuen
+            // return
             return oInternalTransFer;
         }
     }
