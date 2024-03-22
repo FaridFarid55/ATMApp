@@ -50,6 +50,7 @@ namespace myATMapp.Ui
         /// </summary>
         /// <param name="number"></param>
         /// <returns></returns>
+        /// 
         public static bool limit(int number)
         {
             //
@@ -71,6 +72,7 @@ namespace myATMapp.Ui
             return default;
 
         }
+
         /// <summary>
         /// this method get secret input
         /// </summary>
@@ -146,7 +148,7 @@ namespace myATMapp.Ui
         // this method check card pin
         public static int CheckCardPIN()
         {
-            int nPIN = Convert.ToInt32(ClsValidator.GetSecretInput("Enter your Card Pin"));
+            int nPIN = Convert.ToInt32(ClsValidator.GetSecretInput("\nEnter your Card Pin"));
             return nPIN;
         }
 

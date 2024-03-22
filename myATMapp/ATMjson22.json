@@ -1,0 +1,29 @@
+[
+  {
+    "Id": "1",
+    "FullName": "Farid Farid",
+    "CardPin": "123123",
+    "AccountNumber": "123456",
+    "CardNumber": "560600",
+    "AccountBalance": "50000",
+    "IsLocked": "false"
+  },
+  {
+    "Id": "2",
+    "FullName": "Ali ahmed",
+    "CardPin": "124124",
+    "AccountNumber": "123457",
+    "CardNumber": "606000",
+    "AccountBalance": "40000",
+    "IsLocked": "false"
+  },
+  {
+    "Id": "3",
+    "FullName": "mohamed ail",
+    "CardPin": "789789",
+    "AccountNumber": "22445566",
+    "CardNumber": "600600",
+    "AccountBalance": "20000",
+    "IsLocked": "true"
+  }
+]

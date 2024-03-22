@@ -14,7 +14,7 @@ namespace myATMapp.Domain
         public int UserBankAccountId { get; set; }
         public DateTime TransActionDate { get; set; }
         public EnTransActionType TransActionType { get; set; }
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
         public decimal TransActionAmount { get; set; }
 
     }

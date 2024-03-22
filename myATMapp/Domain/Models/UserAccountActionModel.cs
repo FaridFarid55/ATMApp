@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace myATMapp.Domain
+namespace myATMapp.Domain.Models
 {
-    public class UserAccount
+    public class UserAccountActionModel
     {
         // property
         public int Id { get; set; }

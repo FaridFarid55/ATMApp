@@ -1,4 +1,6 @@
-﻿using myATMapp.Domain;
+﻿using myATMapp.Bl.Class;
+using myATMapp.Bl.@interface;
+using myATMapp.Domain.Models;
 using myATMapp.Ui;
 using System;
 using System.Collections.Generic;
@@ -9,20 +11,17 @@ using System.Threading.Tasks;
 
 namespace myATMapp.App
 {
-    public class Entry
+    public class Program
     {
         public static void Main(string[] args)
         {
-            UserAccount oUserAccount = new UserAccount();
+            // Initialize
+            UserAccountActionModel oUserAccount = new UserAccountActionModel();
             ATMApp oATMApp = new ATMApp();
-
-            // get Initialize Date
-            oATMApp.InitializeDate();
 
             // run
             oATMApp.Run();
             Console.WriteLine();
-
         }
 
     }

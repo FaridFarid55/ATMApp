@@ -9,10 +9,10 @@ namespace myATMapp.Domain.Enums
     public enum EnAppMenu
     {
         CheckBalance = 1,
-        PlaceDeposit,
-        MakeWithdrawal,
-        InternalTransFer,
-        ViewTransAction,
-        Logout
+        PlaceDeposit=2,
+        MakeWithdrawal=3,
+        InternalTransFer=4,
+        ViewTransAction=5,
+        Logout=0
     }
 }

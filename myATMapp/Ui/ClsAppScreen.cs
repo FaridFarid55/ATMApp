@@ -1,6 +1,6 @@
 ﻿using myATMapp.App;
-using myATMapp.Bl;
-using myATMapp.Domain;
+using myATMapp.Bl.Class;
+using myATMapp.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,15 +35,17 @@ namespace myATMapp.Ui
             ClsUiHelper.PressEnterToContinue();
         }
 
-        internal static UserAccount UserLoginForm()
+        internal static UserAccountActionModel UserLoginForm()
         {
-            UserAccount TempUserAccount = new UserAccount();
+            UserAccountActionModel TempUserAccount = new UserAccountActionModel();
 
             // this method check card number
             TempUserAccount.CardNumber = ClsValidator.CheckCardNumber();
 
             // this method check pin  password
             TempUserAccount.CardPin = ClsValidator.CheckCardPIN();
+
+            TempUserAccount.Id = ClsUiHelper.TransActionId();
 
             // return
             return TempUserAccount;
@@ -68,8 +70,8 @@ namespace myATMapp.Ui
             Console.Clear();
             ClsUiHelper.PrintMessage("your Account is Locked. Please go to the nearest branch" +
                                     "to unLock your Account. Thank you.", true);
-            ClsUiHelper.PressEnterToContinue();
 
+            // Exit program
             Environment.Exit(1);
         }
 
@@ -88,14 +90,14 @@ namespace myATMapp.Ui
         internal static void DisplayAppMenu()
         {
             Console.Clear();
-            Console.WriteLine("------------ My ATM App Menu ------------");
-            Console.WriteLine(":                                       :");
-            Console.WriteLine(":1. Account Balance                     :");
-            Console.WriteLine(":2. Cash Deposit                        :");
-            Console.WriteLine(":3. Withdrawal                          :");
-            Console.WriteLine(":4. TransFer                            :");
-            Console.WriteLine(":5. TransAction                         :");
-            Console.WriteLine(":0. Logout                              :\n");
+            Console.WriteLine(" ----------- My ATM App Menu --------------- ");
+            Console.WriteLine(":                                           :");
+            Console.WriteLine(":1. Account Balance                         :");
+            Console.WriteLine(":2. Cash Deposit                            :");
+            Console.WriteLine(":3. Withdrawal                              :");
+            Console.WriteLine(":4. TransFer                                :");
+            Console.WriteLine(":5. ViewTransAction                         :");
+            Console.WriteLine(":0. Logout                                  :\n");
         }
 
         /// <summary>
@@ -112,7 +114,7 @@ namespace myATMapp.Ui
         /// this method main Select Amount
         /// </summary>
         /// <returns></returns>
-        internal static float SelectAmount()
+        internal static decimal SelectAmount()
         {
             Console.WriteLine("");
             Console.WriteLine("1. {0}500                 5. {0}5000\n" +
@@ -122,21 +124,48 @@ namespace myATMapp.Ui
                                          "0. {0}other", cur);
             Console.WriteLine("");
             //
-            float oSelectAmount = ClsValidator.convert<float>("option:");
+            decimal oSelectAmount = ClsValidator.convert<decimal>("option:");
 
             // return option Make Withdrawal
             return ClsUiHelper.OptionWithdrawal(oSelectAmount);
         }
 
-        internal static ClsinternalTransFer internalTransFerFrom()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        internal static ClsInternalTransFer internalTransFerFrom()
         {
-            var oInternalTransFer = new ClsinternalTransFer();
+            var oInternalTransFer = new ClsInternalTransFer();
             oInternalTransFer.RecipientBankAccountNumber = ClsValidator.convert<int>("Recipient`s Account Numbers");
             oInternalTransFer.TransFerAmount = ClsValidator.convert<decimal>($"Amount {cur}");
             oInternalTransFer.RecipientBankAccountName = ClsUiHelper.GetUserInput("Recipient`s Name :");
 
             // return
             return oInternalTransFer;
+        }
+
+
+        /// <summary>
+        /// this method Pre View Bank Notes
+        /// </summary>
+        /// <param name="amount"></param>
+        /// <returns></returns>
+        internal static bool PreViewBankNotes(int amount)
+        {
+            decimal nThousAndNotesCount = amount / 1000;
+            decimal nFiveHundredAndNotesCount = (amount % 1000) / 500;
+
+            Console.WriteLine("\n Summary");
+            Console.WriteLine("----------");
+            Console.WriteLine($"{ClsAppScreen.cur} : 1000 X {nThousAndNotesCount} = {1000 * nThousAndNotesCount}");
+            Console.WriteLine($"{ClsAppScreen.cur} : 500  X {nFiveHundredAndNotesCount} = {500 * nFiveHundredAndNotesCount}");
+            Console.WriteLine($"a Total Amount {ClsUiHelper.FormatAmount(amount)}\n\n");
+
+            byte nPotion = ClsValidator.convert<byte>("1 to confirm");
+
+            // return
+            return nPotion.Equals(1);
         }
     }
 }
