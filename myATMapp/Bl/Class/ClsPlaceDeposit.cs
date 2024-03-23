@@ -34,10 +34,12 @@ namespace myATMapp.Bl.Class
             Console.WriteLine("");
 
             // some bad clothes
-            ClsUiHelper.CheckAmount(nTransitionAmt);
+            if (!ClsUiHelper.CheckAmount(nTransitionAmt))
+                return;
 
             // check
-            ClsUiHelper.EqualsAmount(nTransitionAmt, userAccounts.AccountBalance, "PlaceDeposit failed. you do not have enough balance");
+            if (!ClsUiHelper.EqualsAmount(nTransitionAmt, userAccounts.AccountBalance, "PlaceDeposit failed. you do not have enough balance"))
+                return;
 
             // check as confirm
             if (ClsAppScreen.PreViewBankNotes(nTransitionAmt) == false)

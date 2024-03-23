@@ -24,8 +24,15 @@ namespace myATMapp.Bl.Class
         }
 
         // method
+
+        /// <summary>
+        /// this  MakeWithdrawal ATM
+        /// </summary>
+        /// <param name="useraccount"></param>
+        /// <param name="x"></param>
         public void MakeWithdrawal(UserAccountActionModel useraccount, out List<TransActionModel> x)
         {
+            x = ListTransAction;
             decimal cSelectAmount = ClsAppScreen.SelectAmount();
             // condition
             if (cSelectAmount == -1)
@@ -39,14 +46,17 @@ namespace myATMapp.Bl.Class
                 cSelectAmount = ClsValidator.convert<decimal>($"Amount {ClsAppScreen.cur}");
 
             // input validate
-            ClsUiHelper.CheckAmount(cSelectAmount);
+            if (!ClsUiHelper.CheckAmount(cSelectAmount))
+                return;
 
             //business logic validation
-            ClsUiHelper.EqualsAmount(cSelectAmount, useraccount.AccountBalance, "Withdrawal failed . your balance is to low to Withdrawal");
+            if (!ClsUiHelper.EqualsAmount(cSelectAmount, useraccount.AccountBalance, "Withdrawal failed . your balance is to low to Withdrawal"))
+                return;
 
             // view Withdrawal deities transaction object
             ListTransAction = ClsViewTransAction.InsertTransAction(useraccount.Id, EnTransActionType.Withdrawal, cSelectAmount, "");
             x = ListTransAction;
+
             // update account balance
             useraccount.AccountBalance -= cSelectAmount;
 

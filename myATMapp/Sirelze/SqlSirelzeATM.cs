@@ -1,5 +1,4 @@
-﻿
-using myATMapp.Domain.Models;
+﻿using myATMapp.Domain.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace myATMapp.Sirelze
 {
-    public class JsoneSirelzeATM : ISirelzeATm
+    public class SqlSirelzeATM : ISirelzeATm
     {
         public List<UserAccountActionModel> Desirelze(string Jsoin)
         {

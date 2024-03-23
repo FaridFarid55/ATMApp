@@ -32,10 +32,12 @@ namespace myATMapp.Bl.Class
         // method
         public void ProcessInternalTranFer(ClsInternalTransFer transFer, UserAccountActionModel useraccount)
         {
-            ClsUiHelper.CheckAmount(transFer.TransFerAmount);
+            if (!ClsUiHelper.CheckAmount(transFer.TransFerAmount))
+                return;
 
             // check sender`s UserAccount balance and the minimum kept amount
-            ClsUiHelper.EqualsAmount(transFer.TransFerAmount, useraccount.AccountBalance, "Transfer failed. you do not have enough balance");
+            if (!ClsUiHelper.EqualsAmount(transFer.TransFerAmount, useraccount.AccountBalance, "Transfer failed. you do not have enough balance"))
+                return;
 
             // check Recipient`s Account Numbers valid
             var SelectedBankAccountRecipient =

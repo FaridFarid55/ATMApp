@@ -17,13 +17,19 @@ namespace myATMapp.App
     {
         #region Initialize
         // Initialize
-        public static IReadeATM oReadATM = new JsonFileDl();
-        public static ISirelzeATm oSirelzeATM = new JsoneSirelzeATM();
+        private IReadeATM _oReadATM;
+        private ISirelzeATm _oSirelzeATM;
         IUserAccountAction user = new ClsMakeWithdrawal();
         private UserAccountActionModel UserAccount = new UserAccountActionModel();
         private List<TransActionModel> ListTransAction;
         #endregion
 
+        // Constrctor
+        public ATMApp(IReadeATM oReadATM, ISirelzeATm oSirelzeATM)
+        {
+            _oReadATM = oReadATM;
+            _oSirelzeATM = oSirelzeATM;
+        }
 
         /// <summary>
         /// this method  Initialize data
@@ -32,10 +38,10 @@ namespace myATMapp.App
         public List<UserAccountActionModel> Initialize()
         {
             // open file
-            string File = oReadATM.ReadeATM();
+            string File = _oReadATM.ReadeATM();
 
             // Desirelze json Object
-            List<UserAccountActionModel> ListUserAccount = oSirelzeATM.Desirelze(File);
+            List<UserAccountActionModel> ListUserAccount = _oSirelzeATM.Desirelze(File);
 
             // return
             return ListUserAccount;

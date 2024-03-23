@@ -1,6 +1,8 @@
 ﻿using myATMapp.Bl.Class;
 using myATMapp.Bl.@interface;
+using myATMapp.Dal;
 using myATMapp.Domain.Models;
+using myATMapp.Sirelze;
 using myATMapp.Ui;
 using System;
 using System.Collections.Generic;
@@ -16,8 +18,8 @@ namespace myATMapp.App
         public static void Main(string[] args)
         {
             // Initialize
-            UserAccountActionModel oUserAccount = new UserAccountActionModel();
-            ATMApp oATMApp = new ATMApp();
+            var Sirelze = new SqlSirelzeATM();
+            ATMApp oATMApp = new ATMApp(new SqlServerATM(Sirelze), Sirelze);
 
             // run
             oATMApp.Run();
