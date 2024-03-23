@@ -6,8 +6,6 @@ using myATMapp.Domain.Enums;
 using myATMapp.Domain.Models;
 using myATMapp.Dal;
 using myATMapp.Ui;
-using System.Runtime.Intrinsics;
-using System.Security.Principal;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using myATMapp.Sirelze;
 

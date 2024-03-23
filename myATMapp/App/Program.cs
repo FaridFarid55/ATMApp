@@ -1,15 +1,5 @@
-﻿using myATMapp.Bl.Class;
-using myATMapp.Bl.@interface;
-using myATMapp.Dal;
-using myATMapp.Domain.Models;
+﻿using myATMapp.Dal;
 using myATMapp.Sirelze;
-using myATMapp.Ui;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace myATMapp.App
 {
@@ -25,6 +15,5 @@ namespace myATMapp.App
             oATMApp.Run();
             Console.WriteLine();
         }
-
     }
 }
