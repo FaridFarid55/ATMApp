@@ -4,6 +4,8 @@
 
 **ATMApp** is a console application developed in C# that simulates the core functionalities of an Automated Teller Machine (ATM). The application is designed to demonstrate fundamental programming concepts, layered architecture (Business Logic, Data Layer, UI), and data handling using JSON for account storage.
 
+## Linke : https://www.linkedin.com/posts/farid-farid-5a2478276_atm-app-console-app-hashtagcsharp-activity-7185030019881058304-M82_?utm_source=share&utm_medium=member_desktop&rcm=ACoAAENYQEoBag5ZcqS58s3cc9qYTg0sKJlHu0k
+
 ## Features
 
 The application provides a user-friendly console interface for performing typical ATM operations, including:
